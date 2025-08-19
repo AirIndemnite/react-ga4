@@ -97,10 +97,12 @@ export class GA4 {
       }
       document.body.appendChild(script);
 
-      window.dataLayer = window.dataLayer || [];
-      window.gtag = function gtag() {
-        window.dataLayer.push(arguments);
-      };
+      if ((typeof window.gtag !== "function")) {
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function gtag() {
+          window.dataLayer.push(arguments);
+        };
+      } 
 
       this._hasLoadedGA = true;
     }
@@ -156,6 +158,7 @@ export class GA4 {
    * @param {InitOptions[]|string} GA_MEASUREMENT_ID
    * @param {Object} [options]
    * @param {string} [options.nonce]
+   * @param {boolean} [options.loadGA=true]
    * @param {boolean} [options.testMode=false]
    * @param {string} [options.gtagUrl=https://www.googletagmanager.com/gtag/js]
    * @param {GaOptions|any} [options.gaOptions]
@@ -176,13 +179,18 @@ export class GA4 {
       gaOptions,
       gtagOptions,
       nonce,
+      loadGA = true,
       testMode = false,
       gtagUrl,
     } = options;
     this._testMode = testMode;
 
     if (!testMode) {
-      this._loadGA(this._currentMeasurementId, nonce, gtagUrl);
+      if (loadGA) {
+        this._loadGA(this._currentMeasurementId, nonce, gtagUrl);
+      } else {
+        this._hasLoadedGA = true;
+      } 
     }
     if (!this.isInitialized) {
       this._gtag("js", new Date());
@@ -199,8 +207,8 @@ export class GA4 {
           this._gtag("config", config.trackingId);
         }
       });
+      this.isInitialized = true;
     }
-    this.isInitialized = true;
 
     if (!testMode) {
       const queues = [...this._queueGtag];

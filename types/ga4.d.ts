@@ -51,6 +51,7 @@ export class GA4 {
      * @param {InitOptions[]|string} GA_MEASUREMENT_ID
      * @param {Object} [options]
      * @param {string} [options.nonce]
+     * @param {boolean} [options.loadGA=true]
      * @param {boolean} [options.testMode=false]
      * @param {string} [options.gtagUrl=https://www.googletagmanager.com/gtag/js]
      * @param {GaOptions|any} [options.gaOptions]
@@ -58,6 +59,7 @@ export class GA4 {
      */
     initialize: (GA_MEASUREMENT_ID: InitOptions[] | string, options?: {
         nonce?: string;
+        loadGA?: boolean;
         testMode?: boolean;
         gtagUrl?: string;
         gaOptions?: GaOptions | any;
